@@ -48,8 +48,7 @@ namespace Day3 {
         }
 
         static void Main(string[] args) {
-            GetContent();
-            //build path for each wire
+            GetContent();            
             var firstPath = BuildPath(fisrtWire);
             var secondPath = BuildPath(secondWire);
 
@@ -66,29 +65,27 @@ namespace Day3 {
             foreach (var s in wire) {
                 var number = Int32.Parse(s.Remove(0, 1));
                 switch (s[0]) {
-                    case 'R':
-                        //here I should add full range of points instead of one
-                        var rng = Enumerable.Range(points.Last().X + 1, points.Last().X + number);
+                    case 'R':                        
+                        var rng = Enumerable.Range(points.Last().X + 1, number);
                         foreach (var x in rng) {
                             points.Add(new Point(x, points.Last().Y));
                         }
 
                         break;
                     case 'L':
-                        var rng2 = Enumerable.Range(points.Last().X - number, points.Last().X - 1);
+                        var rng2 = Enumerable.Range(points.Last().X - number, number).Reverse();
                         foreach (var x in rng2) {
                             points.Add(new Point(x, points.Last().Y));
-                        }
-                        points.Add(new Point(points.Last().X - number, points.Last().Y));
+                        }                        
                         break;
                     case 'U':
-                        var rng3 = Enumerable.Range(points.Last().Y+1, points.Last().Y + number);
+                        var rng3 = Enumerable.Range(points.Last().Y+1, number);
                         foreach (var y in rng3) {
                             points.Add(new Point(points.Last().X, y));
                         }
                         break;
                     case 'D':
-                        var rng4 = Enumerable.Range(points.Last().Y - number, points.Last().Y - 1);
+                        var rng4 = Enumerable.Range(points.Last().Y - number, number).Reverse();
                         foreach (var y in rng4) {
                             points.Add(new Point(points.Last().X, y));
                         }
@@ -100,8 +97,8 @@ namespace Day3 {
         }
 
         private static void GetContent() {
-            //string text = File.ReadAllText("InputFile.txt");
-            string text = "R8,U5,L5,D3\r\nU7,R6,D4,L4";
+            string text = File.ReadAllText("InputFile.txt");
+            //string text = "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\r\nU98,R91,D20,R16,D67,R40,U7,R15,U6,R7";
             var allText = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
             fisrtWire = allText[0].Split(new[] { ',' });
             secondWire = allText[1].Split(new[] { ',' }); ;
