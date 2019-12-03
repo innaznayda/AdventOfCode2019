@@ -9,13 +9,15 @@ namespace Day3 {
         private static string[] secondWire;
 
         class Point {
-            public Point(int v1, int v2) {
+            public Point(int v1, int v2,int v3) {
                 this.X = v1;
                 this.Y = v2;
+                this.Steps = v3;
             }
 
             public int X { get; set; }
             public int Y { get; set; }
+            public int Steps { get; set; }
         }
 
         class PointComparer : IEqualityComparer<Point> {
@@ -24,7 +26,7 @@ namespace Day3 {
 
 
                 //Check whether the products' properties are equal.
-                return x.X == y.X && x.Y == y.Y;
+                return x.X == y.X && x.Y == y.Y && x.Steps <= y.Steps;
             }
 
 
@@ -55,12 +57,14 @@ namespace Day3 {
             var common = firstPath.Intersect(secondPath, new PointComparer()).Skip(1);
 
             Console.WriteLine(common.Select(point => CalculateManhattanDistanceToCenter(point.X, point.Y)).Min());
+
+            //????????Console.WriteLine(common.Select(point => point.Steps).Min());
             Console.ReadLine();
         }
 
         private static List<Point> BuildPath(string[] wire) {
             List<Point> points = new List<Point>();
-            var fisrtPoint = new Point(0, 0);
+            var fisrtPoint = new Point(0, 0,0);
             points.Add(fisrtPoint);
             foreach (var s in wire) {
                 var number = Int32.Parse(s.Remove(0, 1));
@@ -68,26 +72,26 @@ namespace Day3 {
                     case 'R':                        
                         var rng = Enumerable.Range(points.Last().X + 1, number);
                         foreach (var x in rng) {
-                            points.Add(new Point(x, points.Last().Y));
+                            points.Add(new Point(x, points.Last().Y, points.Last().Steps + number));
                         }
 
                         break;
                     case 'L':
                         var rng2 = Enumerable.Range(points.Last().X - number, number).Reverse();
                         foreach (var x in rng2) {
-                            points.Add(new Point(x, points.Last().Y));
+                            points.Add(new Point(x, points.Last().Y, points.Last().Steps + number));
                         }                        
                         break;
                     case 'U':
                         var rng3 = Enumerable.Range(points.Last().Y+1, number);
                         foreach (var y in rng3) {
-                            points.Add(new Point(points.Last().X, y));
+                            points.Add(new Point(points.Last().X, y, points.Last().Steps + number));
                         }
                         break;
                     case 'D':
                         var rng4 = Enumerable.Range(points.Last().Y - number, number).Reverse();
                         foreach (var y in rng4) {
-                            points.Add(new Point(points.Last().X, y));
+                            points.Add(new Point(points.Last().X, y, points.Last().Steps + number));
                         }
                         break;
                     default: break;
@@ -97,8 +101,8 @@ namespace Day3 {
         }
 
         private static void GetContent() {
-            string text = File.ReadAllText("InputFile.txt");
-            //string text = "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\r\nU98,R91,D20,R16,D67,R40,U7,R15,U6,R7";
+            // text = File.ReadAllText("InputFile.txt");
+            string text = "R8,U5,L5,D3\r\nU7,R6,D4,L4";
             var allText = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
             fisrtWire = allText[0].Split(new[] { ',' });
             secondWire = allText[1].Split(new[] { ',' }); ;
